@@ -1,0 +1,463 @@
+<meta charset="UTF-8">
+<title>Tombola Linderakkers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<style>
+  :root {
+    --green: #5a8a3c;
+    --green-dark: #3a5c26;
+    --green-light: #e8f2e0;
+    --green-pale: #f3f8ef;
+    --gold: #d4900a;
+    --gold-light: #fef3db;
+    --win-bg: #e6f4e1;
+    --win-border: #5a8a3c;
+    --miss-bg: #f5f0eb;
+    --miss-border: #c8b89a;
+    --text: #1e3510;
+    --text-muted: #5a6e4a;
+    --bg: #f4f8f1;
+    --card: #ffffff;
+    --shadow: 0 4px 24px rgba(58,92,38,0.10);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --green: #7ab857;
+      --green-dark: #5a8a3c;
+      --green-light: #1e3510;
+      --green-pale: #162a0d;
+      --gold: #f0b830;
+      --gold-light: #2a2000;
+      --win-bg: #1a2e12;
+      --win-border: #7ab857;
+      --miss-bg: #252018;
+      --miss-border: #6b5c42;
+      --text: #e8f2e0;
+      --text-muted: #9ab884;
+      --bg: #111d0a;
+      --card: #1a2e12;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --green: #7ab857;
+    --green-dark: #5a8a3c;
+    --green-light: #1e3510;
+    --green-pale: #162a0d;
+    --gold: #f0b830;
+    --gold-light: #2a2000;
+    --win-bg: #1a2e12;
+    --win-border: #7ab857;
+    --miss-bg: #252018;
+    --miss-border: #6b5c42;
+    --text: #e8f2e0;
+    --text-muted: #9ab884;
+    --bg: #111d0a;
+    --card: #1a2e12;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px 48px;
+  }
+
+  .widget {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+  }
+
+  .widget-header {
+    background: var(--green);
+    color: #fff;
+    padding: 28px 32px 24px;
+    text-align: center;
+    position: relative;
+  }
+  .widget-header .eyebrow {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 6px;
+  }
+  .widget-header h1 {
+    font-size: 1.55rem;
+    font-weight: 900;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .widget-header .sub {
+    font-size: 0.875rem;
+    font-weight: 600;
+    opacity: 0.82;
+    margin-top: 6px;
+  }
+  .ticket-icon {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .widget-body {
+    padding: 28px 32px;
+  }
+
+  label {
+    display: block;
+    font-weight: 800;
+    font-size: 0.875rem;
+    color: var(--green-dark);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  textarea {
+    width: 100%;
+    border: 2px solid var(--green-light);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    background: var(--green-pale);
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+    outline: none;
+    line-height: 1.6;
+  }
+  textarea::placeholder {
+    font-weight: 600;
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+  textarea:focus {
+    border-color: var(--green);
+    background: var(--card);
+  }
+
+  .hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  .btn-check {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.12s;
+  }
+  .btn-check:hover { background: var(--green-dark); }
+  .btn-check:active { transform: scale(0.98); }
+  .btn-check:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+  /* Results */
+  #results { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+
+  .result-card {
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 2px solid transparent;
+    animation: slideIn 0.25s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .result-card.win {
+    background: var(--win-bg);
+    border-color: var(--win-border);
+  }
+  .result-card.miss {
+    background: var(--miss-bg);
+    border-color: var(--miss-border);
+  }
+  .result-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .result-text { flex: 1; }
+  .result-ticket {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .result-msg {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .result-pickup {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--win-border);
+    font-weight: 600;
+  }
+  .result-prize {
+    display: inline-block;
+    background: var(--gold-light);
+    color: var(--gold);
+    font-weight: 900;
+    font-size: 0.82rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Summary banner */
+  .summary-banner {
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+    font-weight: 900;
+    font-size: 1rem;
+    animation: slideIn 0.3s ease;
+    margin-bottom: 4px;
+  }
+  .summary-banner.all-win {
+    background: var(--win-bg);
+    border: 2px solid var(--win-border);
+    color: var(--green-dark);
+  }
+  .summary-banner.some-win {
+    background: var(--gold-light);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+  }
+  .summary-banner.no-win {
+    background: var(--miss-bg);
+    border: 2px solid var(--miss-border);
+    color: var(--text-muted);
+  }
+
+  /* Confetti canvas */
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @media (max-width: 520px) {
+    .widget-body { padding: 20px; }
+    .widget-header { padding: 22px 20px 18px; }
+  }
+</style>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="widget">
+  <div class="widget-header">
+    <span class="ticket-icon">🎟️</span>
+    <div class="eyebrow">Linderakkers · Vakantiekermis 2026</div>
+    <h1>Kijk hier of je gewonnen hebt!</h1>
+    <div class="sub">64 prijzen te winnen</div>
+  </div>
+  <div class="widget-body" id="widget-body">
+    <div id="not-yet" hidden>
+      <div class="summary-banner no-win" style="margin-bottom:0">
+        ⏳ De uitslagen zijn beschikbaar vanaf <strong>15 september 2026</strong>.<br>Kom dan terug om je nummer te controleren!
+      </div>
+    </div>
+    <div id="checker" hidden>
+      <label for="numbers">Jouw lotnummer(s)</label>
+      <textarea id="numbers" placeholder="bijv. 154, 876, 1003" autocomplete="off" inputmode="numeric"></textarea>
+      <div class="hint">Meerdere nummers? Scheidt ze met een komma, spatie of enter.</div>
+      <button class="btn-check" onclick="checkNumbers()">🔍 Controleer mijn nummer(s)</button>
+      <div id="results"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Datumbeperking: pas actief vanaf 15 september 2026
+const RELEASE = new Date('2026-09-15T00:00:00');
+if (new Date() < RELEASE) {
+  document.getElementById('not-yet').hidden = false;
+} else {
+  document.getElementById('checker').hidden = false;
+}
+
+// Prize map: ticket number → array of prize positions
+const PRIZES = {
+  154:[1], 676:[2], 1003:[3], 1581:[4], 129:[5], 1548:[6],
+  1142:[7], 1373:[8], 1392:[9], 1120:[10], 880:[11], 1294:[12],
+  52:[13], 552:[14], 1146:[15], 1554:[16], 125:[17], 393:[18],
+  1132:[19], 1163:[20], 274:[21], 908:[22], 162:[23], 104:[24],
+  1109:[25], 876:[26], 1313:[27], 345:[28], 595:[29], 1173:[30],
+  1264:[31], 314:[32], 160:[33], 964:[34], 1326:[35], 17:[36],
+  772:[37], 857:[38], 390:[39], 296:[40], 707:[41], 3:[42],
+  339:[43], 945:[44], 96:[45], 166:[46], 1:[47], 957:[48],
+  66:[49], 324:[50], 51:[51], 597:[52], 823:[53], 1390:[54],
+  1106:[55], 82:[56], 419:[57], 1262:[58], 283:[59],
+  710:[60], 272:[61], 71:[62], 932:[63], 1237:[64]
+};
+
+function checkNumbers() {
+  const raw = document.getElementById('numbers').value;
+  const resultsEl = document.getElementById('results');
+
+  // Parse: split on commas, spaces, newlines
+  const parts = raw.split(/[\s,;]+/).map(s => s.trim()).filter(s => s.length > 0);
+  if (parts.length === 0) {
+    resultsEl.innerHTML = '<div class="result-card miss"><span class="result-icon">❓</span><div class="result-text"><div class="result-msg">Voer minstens één nummer in.</div></div></div>';
+    return;
+  }
+
+  // Deduplicate
+  const seen = new Set();
+  const numbers = [];
+  for (const p of parts) {
+    const n = parseInt(p, 10);
+    if (isNaN(n) || n <= 0) continue;
+    if (seen.has(n)) continue;
+    seen.add(n);
+    numbers.push(n);
+  }
+
+  if (numbers.length === 0) {
+    resultsEl.innerHTML = '<div class="result-card miss"><span class="result-icon">❓</span><div class="result-text"><div class="result-msg">Geen geldige nummers herkend.</div></div></div>';
+    return;
+  }
+
+  let winners = 0;
+  let html = '';
+
+  for (const n of numbers) {
+    const prizes = PRIZES[n];
+    if (prizes) {
+      winners++;
+      const prizeLabels = prizes.map(p => `Prijs ${p}`).join(' &amp; ');
+      html += `
+        <div class="result-card win">
+          <span class="result-icon">🎉</span>
+          <div class="result-text">
+            <div class="result-ticket">Lot ${n}</div>
+            <div class="result-msg">Proficiat! Je hebt gewonnen!</div>
+            <span class="result-prize">🏆 ${prizeLabels}</span>
+            <div class="result-pickup">📍 Afhalen bij Maria, Galgeveldstraat 68 — van 15/9 tot 15/10</div>
+          </div>
+        </div>`;
+    } else {
+      html += `
+        <div class="result-card miss">
+          <span class="result-icon">🍀</span>
+          <div class="result-text">
+            <div class="result-ticket">Lot ${n}</div>
+            <div class="result-msg">Jammer, maar bedankt voor je steun!</div>
+          </div>
+        </div>`;
+    }
+  }
+
+  // Summary banner when checking multiple numbers
+  let banner = '';
+  if (numbers.length > 1) {
+    if (winners === numbers.length) {
+      banner = `<div class="summary-banner all-win">🎊 Alle ${numbers.length} nummers winnen een prijs!</div>`;
+    } else if (winners > 0) {
+      banner = `<div class="summary-banner some-win">✨ ${winners} van de ${numbers.length} nummers wint een prijs!</div>`;
+    } else {
+      banner = `<div class="summary-banner no-win">Geen van de ${numbers.length} nummers heeft gewonnen. Bedankt voor je steun!</div>`;
+    }
+  }
+
+  resultsEl.innerHTML = banner + html;
+
+  if (winners > 0) launchConfetti();
+}
+
+// Enter key support
+const numbersEl = document.getElementById('numbers');
+if (numbersEl) {
+  numbersEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); checkNumbers(); }
+  });
+}
+
+// Simple confetti
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#5a8a3c','#7ab857','#d4900a','#f5c842','#e8f2e0','#fff'];
+  const pieces = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 200,
+    r: 4 + Math.random() * 5,
+    c: colors[Math.floor(Math.random() * colors.length)],
+    vx: (Math.random() - 0.5) * 3,
+    vy: 2.5 + Math.random() * 3,
+    angle: Math.random() * Math.PI * 2,
+    spin: (Math.random() - 0.5) * 0.2,
+    shape: Math.random() > 0.5 ? 'rect' : 'circle'
+  }));
+
+  let frame;
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const p of pieces) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.fillStyle = p.c;
+      if (p.shape === 'circle') {
+        ctx.beginPath(); ctx.arc(0, 0, p.r, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+      }
+      ctx.restore();
+      p.x += p.vx; p.y += p.vy; p.angle += p.spin;
+      p.vy += 0.04; // gravity
+    }
+    t++;
+    if (t < 200) frame = requestAnimationFrame(draw);
+    else { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  }
+  cancelAnimationFrame(frame);
+  t = 0;
+  draw();
+}
+</script>

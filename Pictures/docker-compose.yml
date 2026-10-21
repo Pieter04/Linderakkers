@@ -1,0 +1,32 @@
+version: "3"
+services:
+  node:
+    image: "node:8"
+  nodepictureparser:
+    container_name: nodepictureparser_container
+    image: smartcropmagick
+    command: >
+      sh -c "ln -s /dev/null /dev/raw1394
+             cd /code
+             cp /code/parsfiles.pl .
+             /code/parsfiles.pl
+             tail -f /dev/null"
+    volumes:
+      - ./:/Pictures
+      - ./:/code
+    depends_on:
+      - imagemagick_smartcrop
+  imagemagick_smartcrop:
+    container_name: imagemagick_smartcrop_container
+    build: 
+      context: ./
+      dockerfile: DockerfileImagemagick
+    image: smartcropmagick
+    depends_on:
+      - node
+
+#    command: "apt-get install imagemagick; perl parsfiles.pl"
+
+#$ docker-compose up -d
+#$ docker exec -it nodepictureparser_container /Pictures/myvol/parsfiles.pl
+#$ docker-compose down

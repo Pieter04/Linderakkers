@@ -1,0 +1,6 @@
+FROM node:8
+RUN apt-get -y update 
+RUN apt-get -y install apt-utils
+RUN apt-get -y install imagemagick libjson-perl libjson-xs-perl libopencv-dev
+RUN npm install -g --unsafe-perm node-opencv
+RUN npm install -g --unsafe-perm smartcrop-cli
